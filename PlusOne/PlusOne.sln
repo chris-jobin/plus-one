@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33103.184
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlusOneData", "PlusOneData\PlusOneData.csproj", "{25A86DF2-6894-49B7-9152-6A969FB306BE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlusOne", "PlusOne\PlusOne.csproj", "{7C92F4C0-A5BF-40F3-AAC4-AF2062819BF5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{25A86DF2-6894-49B7-9152-6A969FB306BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25A86DF2-6894-49B7-9152-6A969FB306BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25A86DF2-6894-49B7-9152-6A969FB306BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25A86DF2-6894-49B7-9152-6A969FB306BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C92F4C0-A5BF-40F3-AAC4-AF2062819BF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C92F4C0-A5BF-40F3-AAC4-AF2062819BF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C92F4C0-A5BF-40F3-AAC4-AF2062819BF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C92F4C0-A5BF-40F3-AAC4-AF2062819BF5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {62999773-6A9F-4F90-B9B7-1375E51A033F}
+	EndGlobalSection
+EndGlobal
