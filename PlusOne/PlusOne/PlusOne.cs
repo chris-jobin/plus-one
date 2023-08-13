@@ -62,7 +62,7 @@ namespace PlusOne
                     message.Author.Id.ToString() != lastValidUserId;
             }
             await context.CreateEntry(message.Content, message.Author.GlobalName, message.Author.Id.ToString(), isValid);
-            var reaction = isValid ? new Emoji("✅") : new Emoji("❌");
+            var reaction = new Emoji(isValid ? "✅" : "❌");
             await message.AddReactionAsync(reaction);
 
             if (!isValid)
