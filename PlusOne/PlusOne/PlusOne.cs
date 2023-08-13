@@ -14,7 +14,7 @@ namespace PlusOne
     {
         public DiscordSocketClient Client { get; set; }
 
-        private const string _PlusOneChannelName = "plus-one";
+        private const string _PlusOneChannelName = "plus-1";
 
         public async Task Start(string token)
         {
