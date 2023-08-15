@@ -10,14 +10,10 @@ namespace PlusOneData
 {
     public class PlusOneContext : DbContext
     {
-        private static bool Created { get; set; }
-
         public PlusOneContext() : base()
         {
-            if (!Created)
+            if (Database.EnsureCreated())
             {
-                Database.EnsureCreated();
-                Created = true;
                 SeedBasicMessages();
             }
         }

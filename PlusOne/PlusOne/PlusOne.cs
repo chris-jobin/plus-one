@@ -71,7 +71,7 @@ namespace PlusOne
             {
                 await message.AddReactionAsync(new Emoji("❌"));
                 var gameOverMessage = await context.GetRandomGameOverMessage();
-                await message.Channel.SendMessageAsync(gameOverMessage.Message);
+                await message.Channel.SendMessageAsync(gameOverMessage.GetMessage());
             }
         }
 
