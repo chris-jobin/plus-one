@@ -24,7 +24,7 @@ namespace PlusOne
             };
             Client = new DiscordSocketClient(config);
             Client.Log += Log;
-            Client.MessageReceived += OnMessage;
+            Client.MessageReceived += OnMessageReceived;
 
             await Client.LoginAsync(TokenType.Bot, token);
             await Client.StartAsync();
@@ -38,7 +38,7 @@ namespace PlusOne
             await Task.Yield();
         }
 
-        private async Task OnMessage(SocketMessage message)
+        private async Task OnMessageReceived(SocketMessage message)
         {
             if (message.Author.IsBot || message.Channel.Name != _PlusOneChannelName)
                 return;
@@ -62,13 +62,17 @@ namespace PlusOne
                     message.Author.Id.ToString() != lastValidUserId;
             }
             await context.CreateEntry(message.Content, message.Author.GlobalName, message.Author.Id.ToString(), isValid);
-            var reaction = new Emoji(isValid ? "✅" : "❌");
-            await message.AddReactionAsync(reaction);
-
-            if (!isValid)
-                return;
-
-            await FunnyNumbers(message);
+            if (isValid)
+            {
+                await message.AddReactionAsync(new Emoji("✅"));
+                await FunnyNumbers(message);
+            }
+            else
+            {
+                await message.AddReactionAsync(new Emoji("❌"));
+                var gameOverMessage = await context.GetRandomGameOverMessage();
+                await message.Channel.SendMessageAsync(gameOverMessage.Message);
+            }
         }
 
         private async Task FunnyNumbers(SocketMessage message)
@@ -87,6 +91,13 @@ namespace PlusOne
                 await message.AddReactionAsync(new Emoji("😩"));
                 await message.AddReactionAsync(new Emoji("👉"));
                 await message.AddReactionAsync(new Emoji("👌"));
+                await message.AddReactionAsync(new Emoji("😏"));
+            }
+            if (value == "80085" || value == "8008135")
+            {
+                await message.AddReactionAsync(new Emoji("🍒"));
+                await message.AddReactionAsync(new Emoji("🍈"));
+                await message.AddReactionAsync(new Emoji("🥥"));
                 await message.AddReactionAsync(new Emoji("😏"));
             }
         }

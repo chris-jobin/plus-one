@@ -18,6 +18,7 @@ namespace PlusOneData
             {
                 Database.EnsureCreated();
                 Created = true;
+                SeedBasicMessages();
             }
         }
 
@@ -25,6 +26,7 @@ namespace PlusOneData
             optionsBuilder.UseSqlite("Data Source=plusone.db");
 
         public DbSet<PlusOneEntry> PlusOneEntries { get; set; }
+        public DbSet<GameOverMessage> GameOverMessages { get; set; }
 
         public async Task<PlusOneEntry> GetLastValidEntry()
         {
@@ -44,6 +46,34 @@ namespace PlusOneData
                 Created = DateTime.Now
             });
             await SaveChangesAsync();
+        }
+
+        public async Task<GameOverMessage> GetRandomGameOverMessage()
+        {
+            var random = new Random();
+            var messages = await GameOverMessages.ToListAsync();
+            var selection = random.Next(messages.Count);
+            return messages[selection];
+        }
+
+        private void SeedBasicMessages()
+        {
+            var messages = new List<string>
+            {
+                "You lose lmao",
+                "jail :(",
+                ":joy:"
+            };
+            foreach (var message in messages)
+            {
+                GameOverMessages.Add(new GameOverMessage
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Message = message,
+                    Created = DateTime.Now
+                });
+            }
+            SaveChangesAsync();
         }
     }
 }
