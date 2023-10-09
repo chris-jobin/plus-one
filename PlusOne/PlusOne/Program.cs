@@ -13,7 +13,8 @@ namespace PlusOne
 
         static string GetToken()
         {
-            var node = JsonNode.Parse(File.ReadAllText(@"./plusone.json"));
+            var path = $"{Directory.GetCurrentDirectory()}/plusone.json";
+            var node = JsonNode.Parse(File.ReadAllText(path));
             var token = node["token"];
             return token.ToString();
         }
