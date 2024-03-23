@@ -110,6 +110,7 @@ namespace PlusOne
                 await message.AddReactionAsync(new Emoji("🍁"));
                 await message.AddReactionAsync(new Emoji("🔥"));
             }
+
             if (value.Contains("69"))
             {
                 await message.AddReactionAsync(new Emoji("🍆"));
@@ -119,6 +120,7 @@ namespace PlusOne
                 await message.AddReactionAsync(new Emoji("👌"));
                 await message.AddReactionAsync(new Emoji("😏"));
             }
+
             if (value == "8008" || value == "80085" || value == "8008135")
             {
                 await message.AddReactionAsync(new Emoji("🍒"));
