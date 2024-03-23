@@ -11,9 +11,6 @@ namespace PlusOneData.Models
     public class GameOverMessage : Keyable
     {
         public string Message { get; set; }
-        public string Link { get; set; }
         public string Description { get; set; }
-
-        public string GetMessage() => !string.IsNullOrEmpty(Message) ? Message : Link;
     }
 }

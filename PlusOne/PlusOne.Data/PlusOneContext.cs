@@ -6,28 +6,42 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PlusOneData
+namespace PlusOne.Data
 {
     public class PlusOneContext : DbContext
     {
+        private const string _databaseName = "plusone.db";
+
         public PlusOneContext() : base()
         {
-            if (Database.EnsureCreated())
-            {
-                SeedBasicMessages();
-            }
+            _ = Database.EnsureCreated();
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
-            optionsBuilder.UseSqlite("Data Source=plusone.db");
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlite("Data Source=" + _databaseName);
+            base.OnConfiguring(optionsBuilder);
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<GameOverMessage>().HasData(
+                    new GameOverMessage { Id = Guid.NewGuid().ToString(), Created = DateTime.Now, Message = "You lose lmao" },
+                    new GameOverMessage { Id = Guid.NewGuid().ToString(), Created = DateTime.Now, Message = "jail :(" },
+                    new GameOverMessage { Id = Guid.NewGuid().ToString(), Created = DateTime.Now, Message = ":joy:" });
+
+            base.OnModelCreating(modelBuilder);
+        }
 
         public DbSet<PlusOneEntry> PlusOneEntries { get; set; }
         public DbSet<GameOverMessage> GameOverMessages { get; set; }
 
         public async Task<PlusOneEntry> GetLastValidEntry()
         {
-            var result = await PlusOneEntries.OrderByDescending(x => x.Created).FirstOrDefaultAsync();
-            return (result?.IsValid ?? false) ? result : null;
+            var lastValidEntry = await PlusOneEntries.OrderByDescending(x => x.Created).FirstOrDefaultAsync();
+            var result = (lastValidEntry?.IsValid ?? false) ? lastValidEntry : null;
+
+            return result;
         }
 
         public async Task CreateEntry(string value, string username, string userId, bool isValid)
@@ -41,6 +55,7 @@ namespace PlusOneData
                 IsValid = isValid,
                 Created = DateTime.Now
             });
+
             await SaveChangesAsync();
         }
 
@@ -49,27 +64,8 @@ namespace PlusOneData
             var random = new Random();
             var messages = await GameOverMessages.ToListAsync();
             var selection = random.Next(messages.Count);
-            return messages[selection];
-        }
 
-        private void SeedBasicMessages()
-        {
-            var messages = new List<string>
-            {
-                "You lose lmao",
-                "jail :(",
-                ":joy:"
-            };
-            foreach (var message in messages)
-            {
-                GameOverMessages.Add(new GameOverMessage
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Message = message,
-                    Created = DateTime.Now
-                });
-            }
-            SaveChangesAsync();
+            return messages[selection];
         }
     }
 }
