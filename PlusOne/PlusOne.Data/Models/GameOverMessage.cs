@@ -10,6 +10,7 @@ namespace PlusOneData.Models
 {
     public class GameOverMessage : Keyable
     {
+        public string ChannelId { get; set; }
         public string Message { get; set; }
         public string Description { get; set; }
     }

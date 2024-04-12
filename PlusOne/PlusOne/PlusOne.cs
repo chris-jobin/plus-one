@@ -72,21 +72,29 @@ namespace PlusOne
         {
             using var context = new PlusOneContext();
 
+            var author = message.Author;
+            var channel = message.Channel;
+            var content = message.Content;
             var isValid = false;
-            var isNumeric = int.TryParse(message.Content, out var numericValue);
+            var isNumeric = int.TryParse(content, out var numericValue);
 
             if (isNumeric)
             {
-                var lastValidEntry = await context.GetLastValidEntry();
+                var lastValidEntry = await context.GetLastChannelEntry(channel.Id.ToString());
                 var lastValidValue = lastValidEntry?.GetValue() ?? 0;
                 var lastValidUserId = lastValidEntry?.UserId;
 
                 isValid =
                     numericValue == (lastValidValue + 1) &&
-                    message.Author.Id.ToString() != lastValidUserId;
+                    author.Id.ToString() != lastValidUserId;
             }
 
-            await context.CreateEntry(message.Content, message.Author.GlobalName, message.Author.Id.ToString(), isValid);
+            await context.CreateEntry(
+                channelId: channel.Id.ToString(),
+                userId: author.Id.ToString(),
+                username: author.GlobalName,
+                value: content,
+                isValid: isValid);
 
             if (isValid)
             {
@@ -96,7 +104,7 @@ namespace PlusOne
             else
             {
                 await message.AddReactionAsync(new Emoji("❌"));
-                var gameOverMessage = await context.GetRandomGameOverMessage();
+                var gameOverMessage = await context.GetRandomGameOverMessage(channel.Id.ToString());
                 await message.Channel.SendMessageAsync(gameOverMessage.Message);
             }
         }

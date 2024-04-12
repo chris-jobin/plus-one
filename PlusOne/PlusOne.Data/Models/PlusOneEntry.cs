@@ -10,9 +10,10 @@ namespace PlusOneData.Models
 {
     public class PlusOneEntry : Keyable
     {
-        public string Value { get; set; }
-        public string UserName { get; set; }
+        public string ChannelId { get; set; }
         public string UserId { get; set; }
+        public string UserName { get; set; }
+        public string Value { get; set; }
         public bool IsValid { get; set; }
         
         public int GetValue() => int.TryParse(Value, out var value) ? value : 0;
