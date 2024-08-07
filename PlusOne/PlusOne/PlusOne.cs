@@ -1,13 +1,7 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using PlusOne.Data;
-using PlusOneData;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Nodes;
-using System.Threading.Tasks;
 
 namespace PlusOne
 {
@@ -105,7 +99,8 @@ namespace PlusOne
             {
                 await message.AddReactionAsync(new Emoji("❌"));
                 var gameOverMessage = await context.GetRandomGameOverMessage(channel.Id.ToString());
-                await message.Channel.SendMessageAsync(gameOverMessage.Message);
+                var messageReference = new MessageReference(message.Id);
+                await message.Channel.SendMessageAsync(gameOverMessage.Message, messageReference: messageReference);
             }
         }
 
