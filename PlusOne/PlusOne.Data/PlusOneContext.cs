@@ -48,12 +48,13 @@ namespace PlusOne.Data
             return result;
         }
 
-        public async Task CreateEntry(string channelId, string userId, string username, string value, bool isValid)
+        public async Task CreateEntry(string channelId, string messageId, string userId, string username, string value, bool isValid)
         {
             await PlusOneEntries.AddAsync(new PlusOneEntry
             {
                 Id = Guid.NewGuid().ToString(),
                 ChannelId = channelId,
+                MessageId = messageId,
                 UserId = userId,
                 UserName = username,
                 Value = value,

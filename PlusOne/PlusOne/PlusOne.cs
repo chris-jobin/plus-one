@@ -16,13 +16,16 @@ namespace PlusOne
 
             var config = new DiscordSocketConfig
             {
-                GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent
+                GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent,
+                MessageCacheSize = 3
             };
 
             _client = new DiscordSocketClient(config);
             _client.Ready += Ready;
             _client.Log += Log;
+
             _client.MessageReceived += OnMessageReceived;
+            _client.MessageDeleted += OnMessageDeleted;
 
             await _client.LoginAsync(TokenType.Bot, token);
             await _client.StartAsync();
@@ -62,6 +65,23 @@ namespace PlusOne
             await Play(message);
         }
 
+        private static async Task OnMessageDeleted(Cacheable<IMessage, ulong> message, Cacheable<IMessageChannel, ulong> channel)
+        {
+            if (channel.Value.Name != _plusoneChannelName)
+            {
+                return;
+            }
+
+            var socketMessage = (message.Value as SocketMessage);
+
+            if (socketMessage is null || socketMessage.Author.IsBot)
+            {
+                return;
+            }
+
+            await MessageDeleted(socketMessage);
+        }
+
         private static async Task Play(SocketMessage message)
         {
             using var context = new PlusOneContext();
@@ -85,6 +105,7 @@ namespace PlusOne
 
             await context.CreateEntry(
                 channelId: channel.Id.ToString(),
+                messageId: message.Id.ToString(),
                 userId: author.Id.ToString(),
                 username: author.GlobalName,
                 value: content,
@@ -100,7 +121,7 @@ namespace PlusOne
                 await message.AddReactionAsync(new Emoji("❌"));
                 var gameOverMessage = await context.GetRandomGameOverMessage(channel.Id.ToString());
                 var messageReference = new MessageReference(message.Id);
-                await message.Channel.SendMessageAsync(gameOverMessage.Message, messageReference: messageReference);
+                await channel.SendMessageAsync(gameOverMessage.Message, messageReference: messageReference);
             }
         }
 
@@ -131,6 +152,26 @@ namespace PlusOne
                 await message.AddReactionAsync(new Emoji("🥥"));
                 await message.AddReactionAsync(new Emoji("😏"));
             }
+        }
+
+        private static async Task MessageDeleted(SocketMessage message)
+        {
+            using var context = new PlusOneContext();
+
+            var messageId = message.Id;
+            var channel = message.Channel;
+            var lastValidEntry = await context.GetLastChannelEntry(channel.Id.ToString());
+
+            if (lastValidEntry is null || lastValidEntry.MessageId != messageId.ToString())
+            {
+                return;
+            }
+
+            var author = message.Author;
+            var value = message.Content;
+            var notification = $"Previous message was deleted! The last valid entry was **{value}**, sent by **{author.GlobalName}**.";
+
+            await channel.SendMessageAsync(notification);
         }
     }
 }

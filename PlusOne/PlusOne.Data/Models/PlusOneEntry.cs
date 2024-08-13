@@ -11,6 +11,7 @@ namespace PlusOneData.Models
     public class PlusOneEntry : Keyable
     {
         public string ChannelId { get; set; }
+        public string MessageId { get; set; }
         public string UserId { get; set; }
         public string UserName { get; set; }
         public string Value { get; set; }
