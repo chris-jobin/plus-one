@@ -57,7 +57,7 @@ namespace PlusOne
 
         private static async Task OnMessageReceived(SocketMessage message)
         {
-            if (message.Author.IsBot || !message.Channel.Name.Contains(_plusoneChannelName))
+            if (message.Author.IsBot || !message.Channel.Name.StartsWith(_plusoneChannelName))
             {
                 return;
             }
@@ -67,7 +67,7 @@ namespace PlusOne
 
         private static async Task OnMessageDeleted(Cacheable<IMessage, ulong> message, Cacheable<IMessageChannel, ulong> channel)
         {
-            if (!channel.Value.Name.Contains(_plusoneChannelName))
+            if (!channel.Value.Name.StartsWith(_plusoneChannelName))
             {
                 return;
             }
