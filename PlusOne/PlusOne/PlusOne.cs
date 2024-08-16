@@ -57,7 +57,7 @@ namespace PlusOne
 
         private static async Task OnMessageReceived(SocketMessage message)
         {
-            if (message.Author.IsBot || message.Channel.Name != _plusoneChannelName)
+            if (message.Author.IsBot || !message.Channel.Name.Contains(_plusoneChannelName))
             {
                 return;
             }
@@ -67,16 +67,21 @@ namespace PlusOne
 
         private static async Task OnMessageDeleted(Cacheable<IMessage, ulong> message, Cacheable<IMessageChannel, ulong> channel)
         {
-            if (channel.Value.Name != _plusoneChannelName)
+            if (!channel.Value.Name.Contains(_plusoneChannelName))
             {
                 return;
             }
 
             var socketMessage = (message.Value as SocketMessage);
 
-            if (socketMessage is null || socketMessage.Author.IsBot)
+            if (socketMessage is null)
             {
                 return;
+            }
+
+            if (socketMessage.Author.Username == _client.CurrentUser.Username && socketMessage.Content.StartsWith("Previous message was deleted!"))
+            {
+                await socketMessage.Channel.SendMessageAsync(socketMessage.Content);
             }
 
             await MessageDeleted(socketMessage);
